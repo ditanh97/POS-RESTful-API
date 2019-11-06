@@ -9,7 +9,7 @@ const cors = require('cors');
 const Router = require ('./src/Routers/index');
 
 const server = express ();
-const port = 5000;
+const port = process.env.DB_PORT || 5000;
 const nodeEnv = 'Development';
 
 server.listen (port, () => {

@@ -16,7 +16,7 @@ const nodeEnv = 'Development';
 //   console.log (`Server is running in port ${port} in ${nodeEnv} Mode`);
 // });
 
-server.listen (port, '0.0.0.0');
+server.listen (port, '::');
   
 
 server.use (logger('dev'));

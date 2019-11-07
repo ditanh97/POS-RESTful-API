@@ -1,4 +1,4 @@
-require('dotenv').config();
+// require('dotenv').config();
 const cashierModel = require('../Models/cashier');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');

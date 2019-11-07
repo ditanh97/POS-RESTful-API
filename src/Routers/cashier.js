@@ -1,6 +1,6 @@
 // Route for /
 const express = require('express')
-const cashierController = require('../controllers/cashier')
+const cashierController = require('../Controllers/cashier')
 const Router = express.Router()
 
 

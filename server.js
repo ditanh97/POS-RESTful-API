@@ -12,9 +12,12 @@ const server = express ();
 const port = process.env.DB_PORT || 5000;
 const nodeEnv = 'Development';
 
-server.listen (port, () => {
-  console.log (`Server is running in port ${port} in ${nodeEnv} Mode`);
-});
+// server.listen (port, () => {
+//   console.log (`Server is running in port ${port} in ${nodeEnv} Mode`);
+// });
+
+server.listen (port, '0.0.0.0');
+  
 
 server.use (logger('dev'));
 server.use (bodyParser.json ());

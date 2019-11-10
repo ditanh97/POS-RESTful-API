@@ -1,6 +1,6 @@
 require ('dotenv/config');
 const express = require ('express');
-const wakeUpDyno = require("wokeDyno.js"); // my module!
+const wakeUpDyno = require('./wokeDyno'); // my module!
 const logger = require ('morgan');
 const bodyParser = require ('body-parser');
 const form = require('./src/Helpers/form')

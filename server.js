@@ -11,7 +11,7 @@ const Router = require ('./src/Routers/index');
 
 const server = express ();
 const port = process.env.PORT || 5000;
-const DYNO_URL = "https://green-store-pos.herokuapp.com/";
+const DYNO_URL = "https://green-store-pos.herokuapp.com";
 const nodeEnv = 'Development';
 
 server.listen (port, () => {

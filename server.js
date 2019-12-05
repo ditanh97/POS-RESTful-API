@@ -24,6 +24,11 @@ server.listen (port, () => {
 
 server.use (logger('dev'));
 server.use (bodyParser.json ());
+
+//==================NEXT TEST=========================
+// server.use (express.json()); //this for raw json send by req.body
+//====================================================
+
 server.use (bodyParser.urlencoded ({extended: false}));
 
 /*=============================================*/

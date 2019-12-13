@@ -20,6 +20,7 @@ module.exports = {
         description: item.product_description,
         image: item.product_image,
         category: item.id_category,
+        category_name: item.product_category,
         price: item.product_price,
         stock: item.product_stock,
         date_add: item.date_added,

@@ -2,7 +2,7 @@ const connection = require ('../Configs/connect');
 module.exports = {
   getProducts: () => {
     return new Promise ((resolve, reject) => {
-      connection.query ('SELECT * FROM products', (err, response) => {
+      connection.query ('SELECT products.id, id_category, product_name, product_description, product_image, product_price, product_stock, date_added, date_updated, categories.product_category  FROM products JOIN categories ON (products.id_category = categories.id)', (err, response) => {
         if (!err) {
           resolve (response);
         } else {
@@ -37,7 +37,7 @@ module.exports = {
   getProduct: req => {
     return new Promise((resolve, reject) =>{
       const id = req.params.id;
-      connection.query ('SELECT * FROM products WHERE id=?',
+      connection.query ('SELECT products.id, id_category, product_name, product_description, product_image, product_price, product_stock, date_added, date_updated, categories.product_category  FROM products JOIN categories ON (products.id_category = categories.id) WHERE products.id=?',
         [id], 
         (err, response) => {
           if(!err) {

@@ -27,6 +27,40 @@ module.exports = {
       );
     });
   },
+  postCategoryWithImage: req => {
+    return new Promise ((resolve, reject) => {
+      if (req.files === null) {
+        return res.status(400).json({msg: 'No file uploaded'})
+      }
+      const file = req.files.file;
+      file.mv(`./public/Images/Uploads/${file.name}`, err => {
+        if (!err) {
+          const fileImage = {
+            result: {
+              fileName: file.name,
+              filePath:  `/Uploads/${file.name}`
+            }
+          }
+          resolve(fileImage)
+        }else {
+          reject(err)
+        }
+      })
+    })
+    //   const body = req.body;
+    //   const result = {category: body.category, image: body.image}
+    //   connection.query ('INSERT INTO categories SET product_category=?, image_category=?',
+    //     [body.category, body.image],
+    //     (err, response) => {
+    //       if (!err) {
+    //         resolve (([response, result]));
+    //       } else {
+    //         reject (err);
+    //       }
+    //     }
+    //   );
+    // });
+  },
   getCategory: req => {
     return new Promise((resolve, reject) =>{
       const id = req.params.id;

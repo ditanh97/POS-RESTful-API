@@ -3,7 +3,7 @@ const express = require ('express');
 const wakeUpDyno = require('./wokeDyno'); // my module!
 const logger = require ('morgan');
 const bodyParser = require ('body-parser');
-const form = require('./src/Helpers/form')
+const fileUpload = require ('express-fileupload');
 /*=============================================*/
 const cors = require('cors');
 /*=============================================*/
@@ -11,19 +11,18 @@ const Router = require ('./src/Routers/index');
 
 const server = express ();
 const port = process.env.PORT || 5000;
-const DYNO_URL = "https://green-store-pos.herokuapp.com";
+// const DYNO_URL = "https://green-store-pos.herokuapp.com";
 const nodeEnv = 'Development';
 
 server.listen (port, () => {
   console.log (`Server is running in port ${port} in ${nodeEnv} Mode`);
-  wakeUpDyno(DYNO_URL); // will start once server starts
+//   wakeUpDyno(DYNO_URL); // will start once server starts
 });
 
 // server.listen (port, '0.0.0.0');
-  
-
 server.use (logger('dev'));
 server.use (bodyParser.json ());
+server.use (fileUpload())
 
 //==================NEXT TEST=========================
 // server.use (express.json()); //this for raw json send by req.body

@@ -21,6 +21,15 @@ module.exports = {
         form.error(res, 400, err);
       });
   },
+  postCategoryWithImage: (req, res) => {
+    catModel
+      .postCategoryWithImage (req)
+      .then (response => res.json(response))
+      .catch (err => {
+        console.error(err);
+        form.error(res, 500, err);
+      });
+  },
   getCategory: (req, res) => {
     catModel
       .getCategory (req)

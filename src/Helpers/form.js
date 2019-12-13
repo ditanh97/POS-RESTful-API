@@ -57,6 +57,7 @@ module.exports = {
       status,
       result: err,
     };
+    res.status(status);
     res.json (form);
   },
 };

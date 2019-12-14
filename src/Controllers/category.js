@@ -26,7 +26,7 @@ module.exports = {
       .postCategoryWithImage (req)
       .then (response => res.json(response))
       .catch (err => {
-        console.error(err);
+        console.error(err, 'err');
         form.error(res, 500, err);
       });
   },

@@ -33,12 +33,13 @@ module.exports = {
         return res.status(400).json({msg: 'No file uploaded'})
       }
       const file = req.files.file;
+      console.log(__dirname, "dirname")
       file.mv(`./public/Images/Uploads/${file.name}`, err => {
         if (!err) {
           const fileImage = {
             result: {
               fileName: file.name,
-              filePath:  `/Uploads/${file.name}`
+              filePath:  `/project1/public/Images/Uploads/${file.name}`
             }
           }
           resolve(fileImage)

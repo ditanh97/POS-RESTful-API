@@ -34,9 +34,9 @@ module.exports = {
       );
     });
   },
-  getProduct: req => {
+  getProduct: (request, reqId = undefined) => {
     return new Promise((resolve, reject) =>{
-      const id = req.params.id;
+      const id = request === undefined? reqId : request.params.id;
       connection.query ('SELECT products.id, id_category, product_name, product_description, product_image, product_price, product_stock, date_added, date_updated, categories.product_category  FROM products JOIN categories ON (products.id_category = categories.id) WHERE products.id=?',
         [id], 
         (err, response) => {
@@ -136,12 +136,12 @@ module.exports = {
       });
     });
   },
-  updateStock: (req, dbProduct) => {
+  updateStock: (req, dbProduct, reqId, type, orderQty) => {
     return new Promise((resolve, reject) =>{
       let body = req.body;
-      let id = req.params.id;
-      let qty = body.qty;
-      let typeStock = body.type;
+      let id = req.params.id || reqId;
+      let qty = body.qty || orderQty;
+      let typeStock = body.type || type;
       const stock = dbProduct[0]["stock"];
       let sign = "+";
       if (typeStock == "reduce") {

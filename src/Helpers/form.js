@@ -41,7 +41,7 @@ module.exports = {
   success2: function(res, status, response, result, type, action) {
     // console.log(type, 'tipe')
     // console.log(action, 'action')
-    let data = (type === "prod")? "product" : (type === "cat") ? "category": "stock";
+    let data = (type === "prod")? "product" : (type === "cat") ? "category": "trans" ? "orders" : "stock";
     let msg = (response["affectedRows"] > 0) ? `Successfully ${action} the ${data}` : `No data in ${data}, ${action} can't be implemented!`;
     let form = {
       message: msg,

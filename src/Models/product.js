@@ -136,26 +136,26 @@ module.exports = {
       });
     });
   },
-  updateStock: (req, dbProduct, reqId, type, orderQty) => {
+  updateStock: (request, dbProduct, reqId= undefined, type=undefined, orderQty=undefined) => {
     return new Promise((resolve, reject) =>{
-      let body = req.body;
-      let id = req.params.id || reqId;
+      let body = request.body;
+      let id = request.params.id || reqId;
       let qty = body.qty || orderQty;
       let typeStock = body.type || type;
       const stock = dbProduct[0]["stock"];
       let sign = "+";
       if (typeStock == "reduce") {
         sign = "-";
-        if (stock - qty < 0) {
-          return reject("Can not update the stock. Stock reduce above limits.");
-        }
+         if (dbProduct !== undefined) if (stock - qty < 0) {
+              return reject("Can not update the stock. Stock reduce above limits.");
+            } 
       }
-      const result = {id: parseInt(id), stock: stock}
+      // const result = {id: parseInt(id), oldStock: stock}
       connection.query(`UPDATE products SET product_stock = product_stock ${sign} ${qty} WHERE id = ${id}`,
         (err, response) => {
           if(!err) {
             console.log(response);
-            resolve (([response, result]));
+            resolve (response);
           } else {
             reject(err);
           }

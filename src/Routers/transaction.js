@@ -3,6 +3,6 @@ const Router = express.Router();
 const verify = require('../Middleware/verifyToken');
 const transController = require('../Controllers/transaction');
 
-Router.post('/', transController.createNewTransaction);
+Router.post('/', transController.createNewSell);
 
 module.exports = Router;

@@ -12,7 +12,7 @@ function generateToken(payload,expire, callback){
 }
 
 
-function transactionUid() {
+function sellTransactionUid() {
     const date = new Date ()
     let day = date.getDate();
     let month = date.getMonth();
@@ -23,4 +23,4 @@ function transactionUid() {
   }
 
 
-  module.exports = {generateToken, transactionUid}
+  module.exports = {generateToken, sellTransactionUid}

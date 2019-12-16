@@ -1,18 +1,18 @@
 const connection = require('../Configs/connect')
 
 module.exports = {
-    createNewTransaction: (req, transactionUid) => {
+    createNewSell: (req, sellTransactionUid) => {
         return new Promise ((resolve, reject) => {
             console.log(req.body, 'bodyd')
             const {cashierId, totalPrice, transactionDetail} = req.body
             let sql_query = 'INSERT INTO transactions SET id_cashier=?, id_order_transaction=?, total_price=?'
             let sql_detail_query = 'INSERT INTO products_transactions (id_order_transaction, id_product, product_quantity, subtotal_price) VALUES ? '
             connection.query(sql_query,
-                [cashierId, transactionUid, totalPrice],
+                [cashierId, sellTransactionUid, totalPrice],
                 (err, response) => {
                     if(!err) {
                         //ini kan query nya async
-                        const values = transactionDetail.map(item => [transactionUid, item.productId, item.productQty, item.subTotal]);
+                        const values = transactionDetail.map(item => [sellTransactionUid, item.productId, item.productQty, item.subTotal]);
                         connection.query(sql_detail_query,
                             [values],
                             (err, response) => {

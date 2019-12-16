@@ -34,9 +34,9 @@ module.exports = {
       );
     });
   },
-  getProduct: req => {
+  getProduct: (request, reqId = undefined) => {
     return new Promise((resolve, reject) =>{
-      const id = req.params.id;
+      const id = request === undefined? reqId : request.params.id;
       connection.query ('SELECT products.id, id_category, product_name, product_description, product_image, product_price, product_stock, date_added, date_updated, categories.product_category  FROM products JOIN categories ON (products.id_category = categories.id) WHERE products.id=?',
         [id], 
         (err, response) => {
@@ -136,26 +136,26 @@ module.exports = {
       });
     });
   },
-  updateStock: (req, dbProduct) => {
+  updateStock: (request, dbProduct, reqId=undefined, type=undefined, orderQty=undefined) => {
     return new Promise((resolve, reject) =>{
-      let body = req.body;
-      let id = req.params.id;
-      let qty = body.qty;
-      let typeStock = body.type;
-      const stock = dbProduct[0]["stock"];
+      let id = request !== undefined? request.params.id : reqId;
+      let qty = request !== undefined ? request.body.qty : orderQty;
+      let typeStock = request !== undefined? request.body.type : type;
       let sign = "+";
       if (typeStock == "reduce") {
         sign = "-";
-        if (stock - qty < 0) {
-          return reject("Can not update the stock. Stock reduce above limits.");
-        }
+         if (dbProduct !== undefined) {
+          const stock = dbProduct[0]["stock"];
+           if (stock - qty < 0) {
+              return reject("Can not update the stock. Stock reduce above limits.");
+            } 
+          }
       }
-      const result = {id: parseInt(id), stock: stock}
       connection.query(`UPDATE products SET product_stock = product_stock ${sign} ${qty} WHERE id = ${id}`,
         (err, response) => {
           if(!err) {
             console.log(response);
-            resolve (([response, result]));
+            resolve (response);
           } else {
             reject(err);
           }

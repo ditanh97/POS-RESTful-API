@@ -3,6 +3,7 @@ const transModel = require('../Models/transaction')
 const form = require('../Helpers/form')
 const {sellTransactionUid} = require('../Helpers/functions')
 
+
 module.exports = {
     createNewSell: async (req, res) => {
         const {transactionDetail} = req.body
@@ -24,28 +25,28 @@ module.exports = {
         transModel
         .createNewSell(req, sellTransactionUid())
         .then (response => {
-            
             let logger = []
             orders.forEach(async ({id,qty})  => {
-                console.log("updating stock", response)
-                await updateStock((request= undefined, dbProduct=undefined, reqId= id, type="reduce", orderQty=qty))
+                await updateStock(request= undefined, dbProduct=undefined, reqId= id, type="reduce", orderQty=qty)
                 .then(response => {
+                    console.log(response, "aiyayao")
                     logger.push({response, id, isSuccess:true})
+                    console.log(logger, 'logger1')
                 })
                 .catch(err => {
+                    console.log("err", err)
                     logger.push({response: err,id, isSuccess:false})
                 })
             })
             if (logger.includes(log => !log.isSuccess)) {
                 form.error(res, 400, 'Error handling update stock')
             }else {
-                console.log(logger, 'logger')
                 form.success2(res, 200, response, req.body, "trans", "create");
             }
         })
         .catch (err => {
-            console.log(err, "dierror rwq")
-            form.error(res, 400, 'Error handling new transaction')
+            if (err.code == "ER_DUP_ENTRY") this.createNewSell(req, res);
+            else form.error(res, 400, 'Error handling new transaction')
         })
     }
 }

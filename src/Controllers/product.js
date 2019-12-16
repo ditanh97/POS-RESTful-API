@@ -101,8 +101,8 @@ module.exports = {
       })
       .then (dbProduct => {
         console.log(dbProduct)
-        prodModel.updateStock(req, dbProduct).then (([response, result]) => {
-          form.success2(res, 200, response, result, "stock", "update");
+        prodModel.updateStock(req, dbProduct).then (response => {
+          form.success2(res, 200, response, req.body, "stock", "update");
         })
         .catch (err => {
           form.error(res, 400, err);

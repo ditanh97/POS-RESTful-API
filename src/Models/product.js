@@ -136,21 +136,21 @@ module.exports = {
       });
     });
   },
-  updateStock: (request, dbProduct, reqId= undefined, type=undefined, orderQty=undefined) => {
+  updateStock: (request, dbProduct, reqId=undefined, type=undefined, orderQty=undefined) => {
     return new Promise((resolve, reject) =>{
-      let body = request.body;
-      let id = request.params.id || reqId;
-      let qty = body.qty || orderQty;
-      let typeStock = body.type || type;
-      const stock = dbProduct[0]["stock"];
+      let id = request !== undefined? request.params.id : reqId;
+      let qty = request !== undefined ? request.body.qty : orderQty;
+      let typeStock = request !== undefined? request.body.type : type;
       let sign = "+";
       if (typeStock == "reduce") {
         sign = "-";
-         if (dbProduct !== undefined) if (stock - qty < 0) {
+         if (dbProduct !== undefined) {
+          const stock = dbProduct[0]["stock"];
+           if (stock - qty < 0) {
               return reject("Can not update the stock. Stock reduce above limits.");
             } 
+          }
       }
-      // const result = {id: parseInt(id), oldStock: stock}
       connection.query(`UPDATE products SET product_stock = product_stock ${sign} ${qty} WHERE id = ${id}`,
         (err, response) => {
           if(!err) {

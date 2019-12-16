@@ -23,7 +23,6 @@ module.exports = {
                                     reject(err);
                                 }
                             })
-                        
                     } else {
                         reject(err)
                     }

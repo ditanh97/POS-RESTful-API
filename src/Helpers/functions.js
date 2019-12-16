@@ -16,8 +16,8 @@ function sellTransactionUid() {
     const date = new Date ()
     let day = date.getDate();
     let month = date.getMonth();
-    let year = date.getFullYear();
-    let randi = Math.floor(Math.random() * 9900) + 10000;
+    let year = date.getFullYear() -2000;
+    let randi = Math.floor(Math.random() * 9900);
    
     return parseInt(`${year}${month}${day}${randi}`)
   }

@@ -21,7 +21,6 @@ module.exports = {
                 return form.error(res, 400, `Quantity of order is exceeding the available stock`)
             }
         }
-        
         transModel
         .createNewSell(req, sellTransactionUid())
         .then (response => {
@@ -29,9 +28,8 @@ module.exports = {
             orders.forEach(async ({id,qty})  => {
                 await updateStock(request= undefined, dbProduct=undefined, reqId= id, type="reduce", orderQty=qty)
                 .then(response => {
-                    console.log(response, "aiyayao")
                     logger.push({response, id, isSuccess:true})
-                    console.log(logger, 'logger1')
+                    // console.log(logger, 'logger1')
                 })
                 .catch(err => {
                     console.log("err", err)

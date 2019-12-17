@@ -95,7 +95,7 @@ const {
                   status: 200,
                   message: 'Login successfully!',
                   username: response[0].username,
-                  password: response[0].password,
+                  id: response[0].id_cashier,
                   token
               })
           })

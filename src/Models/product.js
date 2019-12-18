@@ -1,16 +1,44 @@
 const connection = require ('../Configs/connect');
+const { getMaxPage } = require('../Helpers/feature');
+const { searchProduct } = require('../Helpers/feature');
+const { sorting } = require('../Helpers/feature');
+
+const joinTable = `SELECT products.id, products.id_category, products.product_name, products.product_description, products.product_image, products.product_price, products.product_stock, products.date_added, products.date_updated, categories.product_category FROM products, categories WHERE products.id_category = categories.id `
+
 module.exports = {
-  getProducts: () => {
+  getProducts: (req, page) => {
+    let sql = joinTable;
+    let query = searchProduct(req, sql);
+    sql = sorting(req, query.sql);
+    const paging = `${sql} LIMIT ? OFFSET ?`;
+
     return new Promise ((resolve, reject) => {
-      connection.query ('SELECT products.id, id_category, product_name, product_description, product_image, product_price, product_stock, date_added, date_updated, categories.product_category  FROM products JOIN categories ON (products.id_category = categories.id)', (err, response) => {
-        if (!err) {
-          resolve (response);
-        } else {
-          reject (err);
-        }
-      });
+        getMaxPage(page, query.search, "products", "product_name")
+        .then (maxPage => {
+            const infoPage = {
+                currentPage: page.page,
+                totalAllProduct: maxPage.total,
+                maxPage: maxPage.maxPage
+            };
+            connection.query(paging,
+                query.search == null ? [page.limit, page.offset] : ['%' + query.search + '%', page.limit, page.offset],
+                (err, response) => {
+                    if (!err) {
+                        resolve ({
+                            infoPage,
+                            response
+                        });
+                    }
+                    else {
+                        reject (err);
+                    }
+                }
+            );
+        }).catch(err => {
+            reject(err)
+        });
     });
-  },
+},
   postProduct: req => {
     return new Promise ((resolve, reject) => {
       const body = req.body;
@@ -53,7 +81,6 @@ module.exports = {
       const db = dbProduct[0];
       const id = req.params.id;
       let body = req.body;
-      //disini user bisa saja cuman update nama, makaperlu dicek apakah defined atau undefined, pakai ternary, dan ambil dbase
       let name = body.name? body.name : db.name; 
       let description = body.description? body.description : db.description;
       let image = body.image? body.image: db.image;

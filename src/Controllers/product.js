@@ -1,14 +1,17 @@
 const prodModel = require ('../Models/product');
 const form = require ('../Helpers/form');
+const { pagination } = require('../Helpers/feature');
 module.exports = {
   getProducts: (req, res) => {
+    const page = pagination(req);
     prodModel
-      .getProducts ()
-      .then (response => {
-        form.success (res, 200, response, "prod");
+      .getProducts (req,page)
+      .then (({infoPage,response}) => {
+          form.success3 (res, 200, infoPage,response, "prod");
       })
       .catch (err => {
         form.error(res, 400, err);
+        console.log("error", err)
       });
   },
   postProduct: (req, res) => {

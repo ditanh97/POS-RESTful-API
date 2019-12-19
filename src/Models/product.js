@@ -47,6 +47,7 @@ module.exports = {
         description: body.description,
         image: body.image,
         category: body.category,
+        category_name: body.category_name,
         price: body.price,
         stock: body.stock}
       let sql_query = 'INSERT INTO products SET product_name=?, product_description=?, product_image=?, id_category=?, product_price=?, product_stock=?'
@@ -87,10 +88,11 @@ module.exports = {
       let category = body.category? body.category: db.category;
       let price = body.price? body.price: db.price;
       let stock = body.stock? body.stock: db.stock;
+      let category_name = body.category_name? body.category_name: db.category_name;
       if (stock < 0 || price < 0) {
         return reject("Price or stocks can not be negative.");
         }
-      const result = {id: parseInt(id), name,description, image, category, price, stock}
+      const result = {id: parseInt(id), name,description, image, category, price, stock, category_name}
       let sql_query = 'UPDATE products SET product_name=?, product_description=?, product_image=?, id_category=?, product_price=?, product_stock=? WHERE id=?'
       connection.query(sql_query,
         [name, description, image, category, price, stock, id],

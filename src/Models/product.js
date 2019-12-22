@@ -2,6 +2,7 @@ const connection = require ('../Configs/connect');
 const { getMaxPage } = require('../Helpers/feature');
 const { searchProduct } = require('../Helpers/feature');
 const { sorting } = require('../Helpers/feature');
+const { filterByCategory } = require('../Helpers/feature');
 
 const joinTable = `SELECT products.id, products.id_category, products.product_name, products.product_description, products.product_image, products.product_price, products.product_stock, products.date_added, products.date_updated, categories.product_category FROM products, categories WHERE products.id_category = categories.id `
 
@@ -9,7 +10,8 @@ module.exports = {
   getProducts: (req, page) => {
     let sql = joinTable;
     let query = searchProduct(req, sql);
-    sql = sorting(req, query.sql);
+    let catFilter = filterByCategory(req, query.sql)
+    sql = sorting(req, catFilter.sql);
     const paging = `${sql} LIMIT ? OFFSET ?`;
 
     return new Promise ((resolve, reject) => {
@@ -21,7 +23,9 @@ module.exports = {
                 maxPage: maxPage.maxPage
             };
             connection.query(paging,
-                query.search == null ? [page.limit, page.offset] : ['%' + query.search + '%', page.limit, page.offset],
+                query.search == null && catFilter.catId == null? [page.limit, page.offset] :
+                query.search == null && catFilter.catId != null? [catFilter.catId, page.limit, page.offset] :
+                query.search != null && catFilter.catId != null? ['%' + query.search + '%',catFilter.catId, page.limit, page.offset] : ['%' + query.search + '%', page.limit, page.offset],
                 (err, response) => {
                     if (!err) {
                         resolve ({
@@ -47,6 +51,7 @@ module.exports = {
         description: body.description,
         image: body.image,
         category: body.category,
+        category_name: body.category_name,
         price: body.price,
         stock: body.stock}
       let sql_query = 'INSERT INTO products SET product_name=?, product_description=?, product_image=?, id_category=?, product_price=?, product_stock=?'
@@ -87,10 +92,11 @@ module.exports = {
       let category = body.category? body.category: db.category;
       let price = body.price? body.price: db.price;
       let stock = body.stock? body.stock: db.stock;
+      let category_name = body.category_name? body.category_name: db.category_name;
       if (stock < 0 || price < 0) {
         return reject("Price or stocks can not be negative.");
         }
-      const result = {id: parseInt(id), name,description, image, category, price, stock}
+      const result = {id: parseInt(id), name,description, image, category, price, stock, category_name}
       let sql_query = 'UPDATE products SET product_name=?, product_description=?, product_image=?, id_category=?, product_price=?, product_stock=? WHERE id=?'
       connection.query(sql_query,
         [name, description, image, category, price, stock, id],

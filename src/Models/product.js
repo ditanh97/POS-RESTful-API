@@ -2,6 +2,7 @@ const connection = require ('../Configs/connect');
 const { getMaxPage } = require('../Helpers/feature');
 const { searchProduct } = require('../Helpers/feature');
 const { sorting } = require('../Helpers/feature');
+const { filterByCategory } = require('../Helpers/feature');
 
 const joinTable = `SELECT products.id, products.id_category, products.product_name, products.product_description, products.product_image, products.product_price, products.product_stock, products.date_added, products.date_updated, categories.product_category FROM products, categories WHERE products.id_category = categories.id `
 
@@ -9,7 +10,8 @@ module.exports = {
   getProducts: (req, page) => {
     let sql = joinTable;
     let query = searchProduct(req, sql);
-    sql = sorting(req, query.sql);
+    let catFilter = filterByCategory(req, query.sql)
+    sql = sorting(req, catFilter.sql);
     const paging = `${sql} LIMIT ? OFFSET ?`;
 
     return new Promise ((resolve, reject) => {
@@ -21,7 +23,9 @@ module.exports = {
                 maxPage: maxPage.maxPage
             };
             connection.query(paging,
-                query.search == null ? [page.limit, page.offset] : ['%' + query.search + '%', page.limit, page.offset],
+                query.search == null && catFilter.catId == null? [page.limit, page.offset] :
+                query.search == null && catFilter.catId != null? [catFilter.catId, page.limit, page.offset] :
+                query.search != null && catFilter.catId != null? ['%' + query.search + '%',catFilter.catId, page.limit, page.offset] : ['%' + query.search + '%', page.limit, page.offset],
                 (err, response) => {
                     if (!err) {
                         resolve ({

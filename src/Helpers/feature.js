@@ -39,6 +39,35 @@ module.exports.getMaxPage = (page, keyword, table, field) => {
     });
 }
 
+//Search Product By
+module.exports.searchProduct = (req, sql) => {
+    const search = req.query.search;
+
+    if (search != null) {
+        sql += ` AND products.product_name LIKE ? `;
+    } else {
+        sql
+    }
+
+    return {
+        sql,
+        search
+    };
+}
+
+//Filter Product By Category
+module.exports.filterByCategory = (req, sql) => {
+    let catId = req.query.catId;
+    if (catId !=  null) {
+        sql += ` AND products.id_category = ? `
+    } else {
+        sql
+    }
+    return {
+        sql,
+        catId
+    }
+}
 //Sort Product By
 module.exports.sorting = (req, sql) => {
     let orderBy = req.query.order;
@@ -61,22 +90,5 @@ module.exports.sorting = (req, sql) => {
             sql += 'DESC';
         }
     }
-
     return sql
-}
-
-//Search Product By
-module.exports.searchProduct = (req, sql) => {
-    const search = req.query.search;
-
-    if (search != null) {
-        sql += ` AND products.product_name LIKE ? `;
-    } else {
-        sql
-    }
-
-    return {
-        sql,
-        search
-    };
 }

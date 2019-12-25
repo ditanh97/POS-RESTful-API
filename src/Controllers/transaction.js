@@ -46,5 +46,13 @@ module.exports = {
             if (err.code == "ER_DUP_ENTRY") this.createNewSell(req, res);
             else form.error(res, 400, 'Error handling new transaction')
         })
-    }
+    },
+    getRecentSellByCashierId: (req, res) => {
+        transModel
+          .getRecentSellByCashierId(req)
+          .then(response => {
+              form.success(res, 200, response, 'bill')
+          })
+          .catch(err => form.error(res, 400, err));
+    },
 }

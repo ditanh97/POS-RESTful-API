@@ -29,8 +29,32 @@ module.exports = {
                 })
         })
     },
+    getRecentSellByCashierId: (req) => {
+        const cashierId = req.body.cashierId;
+        return new Promise((resolve, reject) => {
+            console.log(cashierId, 'idcashier')
+            let query1 = 'SELECT * FROM transactions WHERE date_added = (SELECT max(date_added) FROM transactions WHERE id_cashier = ?)'
+            let query2 = 'SELECT * FROM products_transactions WHERE id_order_transaction = ?'
+            connection.query(query1, [cashierId],
+                (err, response) => {
+                    if (!err) {
+                        const orderId = response[0].id_order_transaction
+                        connection.query(query2,
+                            [orderId],
+                            (err, response) => {
+                                if(!err){
+                                    resolve(response)
+                                }
+                                else {
+                                    reject(err);
+                                }
+                            })
+                    }
+                    else reject(err);
+                })
+        });
+    }
 }
-
 
 
   

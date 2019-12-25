@@ -3,7 +3,7 @@ module.exports = {
     if (result.length == 0) {
       result = "No available data can be displayed"
     }else {
-      result = (type === "prod")? this.prodForm(result) : this.catForm(result)
+      result = (type === "prod")? this.prodForm(result) : (type === "cat") ? this.catForm(result) : this.billForm(result)
       
     }
     let form = {
@@ -73,6 +73,16 @@ module.exports = {
           id: item.id,
           category: item.product_category,
           image: item.image_category,
+        };
+      })
+    },
+    billForm: function(result) {
+      return result.map(item => {
+        return {
+          id_order: item.id_order_transaction,
+          id_product: item.id_product,
+          qty: item.product_quantity,
+          subTotal: item.subtotal_price
         };
       })
     },

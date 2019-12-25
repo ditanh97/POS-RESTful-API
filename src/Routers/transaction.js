@@ -5,5 +5,5 @@ const verify = require('../Middleware/verifyToken');
 const transController = require('../Controllers/transaction');
 
 Router.post('/', verify, transController.createNewSell);
-
+Router.get('/', verify, transController.getRecentSellByCashierId);
 module.exports = Router;
